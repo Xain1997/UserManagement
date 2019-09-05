@@ -1,0 +1,26 @@
+.box {
+    
+     margin-top: 100px;
+     text-align:center;
+     
+     
+         
+}
+.butt{
+    margin: 10px;
+    width: 200px;
+    height: 50px;
+    color: white;
+    background-color:black;
+    font-size: 20px;
+}
+.ibox{
+    margin: 5px;
+    width: 500px;
+    height: 50px;
+}
+.h{
+    margin: 10px;
+    font-size: 40px;
+    color: #000;
+}

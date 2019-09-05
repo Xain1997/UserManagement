@@ -6,10 +6,23 @@ import { ApolloClient, createNetworkInterface } from 'react-apollo';
 import 'antd/dist/antd.css';
 
 import Routes from './routes';
+import { AuthContextProvider } from './routes/AuthContext';
 
 const networkInterface = createNetworkInterface({
   uri: 'http://localhost:3000/graphql',
 });
+
+networkInterface.use([{
+  applyMiddleware(req, next) {
+    if (!req.options.headers) {
+      req.options.headers = {};
+    }
+    req.options.headers['x-token'] = localStorage.getItem('token');
+    req.options.headers['x-refresh-token'] = localStorage.getItem('refreshToken');
+    next();
+  }
+}]);
+
 const client = new ApolloClient({
   networkInterface: networkInterface
 });
@@ -18,6 +31,9 @@ const App = () => (
   <ApolloProvider client={client}>
     <Routes />
   </ApolloProvider>
-);
+);  
+  
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<AuthContextProvider>
+  <App />
+</AuthContextProvider>, document.getElementById('root'));

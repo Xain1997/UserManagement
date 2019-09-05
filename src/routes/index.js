@@ -1,20 +1,42 @@
 import React from 'react';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-} from 'react-router-dom'
+import { AuthContext } from './AuthContext';
+import { BrowserRouter, Route, Redirect } from 'react-router-dom'
+
 
 import Auth from './Auth';
+import Forget from './Forget';
 import Login from './Login';
 import Register from './Register';
 
+
+function AuthRoute({ component: Component, ...rest }) {
+  return (
+    <AuthContext.Consumer>
+      {({ isAuthenticated }) =>
+        <Route
+          {...rest}
+          render={props =>
+            isAuthenticated ? (
+              <Component {...props} />
+            ) : (
+                <Redirect to={{
+                  pathname: '/login',
+                  state: { from: props.location }
+                }}
+                />
+              )
+          }
+        />
+      }
+    </AuthContext.Consumer>
+  );
+}
+
 export default () => (
   <BrowserRouter>
-    <Switch>
-      <Route exact path="/login" render={props => <Login {...props} />} />
-      <Route exact path="/register" render={props => <Register {...props} />} />
-      <Route exact path="/auth" render={props => <Auth {...props} />} />
-    </Switch>
+    <Route exact path="/login" component={Login} />
+    <Route exact path="/register" component={Register} />
+    <Route exact path="/forget" component={Forget} />
+    <AuthRoute path="/auth" component={Auth} />
   </BrowserRouter>
 );
